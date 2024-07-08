@@ -1,15 +1,17 @@
 ﻿using MySql.Data.MySqlClient;
-using Mysqlx.Crud;
+using SQL.Analyzer.dbAnalyzer;
 using SQL.Entity;
 using SQL.Service.Data_Base;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace SQL.Repository
 {
     public class ProductRepository
     {
+        //CRUD
+
+        //отримує перше і останє айді (якщо табалицю відсортовано від мін до макс)
         public string getRangeID()
         {
             Singleton.GetInstance().getConnection().Open();
@@ -33,8 +35,14 @@ namespace SQL.Repository
             }
         }
 
+        //Read one
         public Product getOne(int id)
         {
+            if (!MySqlInspector.checkId(id, "shop", "product"))
+            {
+                throw new Exception("non-existent id");
+            }
+
             Singleton.GetInstance().getConnection().Open();
 
             string sqlRequest =
@@ -62,6 +70,7 @@ namespace SQL.Repository
             }
         }
 
+        //Read all
         public List<Product> getAll(int start = 0, int limit = 10)
         {
             List<Product> productsList = new List<Product>();
@@ -95,7 +104,6 @@ namespace SQL.Repository
             }
         }
 
-        //CRUD
 
         //Create
         public void create(string name, string discription, int cost)
@@ -119,7 +127,24 @@ namespace SQL.Repository
         //Update
         public void update(int id,string name,string description,int cost)
         {
+
+            if (name.Trim().Length == 0)
+            { throw new Exception("name length is zero"); }
+
+            if (description.Trim().Length == 0) 
+            { throw new Exception("description length is zero"); }
+
+            if (cost <= 0)
+            { throw new Exception("cost is less than or equal to zero"); }
+
+
+            if (!MySqlInspector.checkId(id,"shop","product"))
+            {
+                throw new Exception("non-existent id");
+            }
+
             Singleton.GetInstance().getConnection().Open();
+
             string sqlRequest =
             "UPDATE `product` " +
             "SET " +
@@ -142,7 +167,14 @@ namespace SQL.Repository
         //Delete
         public void delete(int id)
         {
+            if (!MySqlInspector.checkId(id, "shop", "product"))
+            {
+                throw new Exception("non-existent id");
+            }
+
             Singleton.GetInstance().getConnection().Open();
+
+
             string sqlRequest =
             "DELETE " +
             "FROM `product`" +

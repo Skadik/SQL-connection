@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using SQL.Repository;
 using SQL.Service.Data_Base;
+using System;
 using System.Windows.Forms;
 
 namespace SQL
@@ -11,16 +12,19 @@ namespace SQL
         {
             InitializeComponent();
             ProductRepository pr = new ProductRepository();
+           
+                //create
+                //pr.create("light","sonne",1111);
 
-            //create
-            //pr.create("light","sonne",1111);
+                //update
+                pr.update(12,"apple","good apples",30);
 
-            //delete
-            pr.delete(11);
+                //delete
+                //pr.delete(11);
 
 
-
-            //MessageBox.Show(pr.getRangeID());
+                //MessageBox.Show(pr.getRangeID());
+           
         }
     }
 }
